@@ -43,8 +43,8 @@
 HardwareSerial arduinoESPSerial(1);
 
 // Your WiFi credentials
-const char *ssid = "TP-Link_57E2";
-const char *pass = "n4sak4pitb4hay";
+const char *ssid = "";
+const char *pass = "";
 
 String webAppUrl = "https://script.google.com/macros/s/AKfycbyoG91m2IKt-E0S56rbRURwkG16f8GLg3D1nAxU5wEhkJh0B7EwAMxKm94Gdj4NSGDzvg/exec";
 String fullData;
