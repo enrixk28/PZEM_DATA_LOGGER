@@ -39,7 +39,7 @@ void parseString(String input) {
   // Assign the parsed values to results1, results2, and results3 arrays
   for (int i = 0; i < 6; i++) {
     results1[i] = tempArray[i];
-    results2[i] = tempArray[i + 5];
-    results3[i] = tempArray[i + 11];
+    results2[i] = tempArray[i + 6];
+    results3[i] = tempArray[i + 12];
   }
 }

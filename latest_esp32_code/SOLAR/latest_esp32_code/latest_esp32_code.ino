@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial // For debugging
 #define BLYNK_TEMPLATE_ID ""
 #define BLYNK_TEMPLATE_NAME ""
-#define BLYNK_AUTH_TOKEN ""  // Solar
+#define BLYNK_AUTH_TOKEN ""  // Electronics
 
 // Fundamental Libraries used in this code
 #include "FS.h" // Library for File Manipulation
@@ -18,12 +18,28 @@
 #define TX_PIN 17  // GPIO 17 for TX
 
 // Blynk Virtual Pins for monitoring
-#define VPIN_VOLTAGE V0
-#define VPIN_CURRENT V1
-#define VPIN_POWER V2
-#define VPIN_ENERGY V3
-#define VPIN_FREQ V4
-#define VPIN_PF V5
+#define VPIN_VOLTAGE1 V0
+#define VPIN_CURRENT1 V1
+#define VPIN_POWER1 V2
+#define VPIN_ENERGY1 V3
+#define VPIN_FREQ1 V4
+#define VPIN_PF1 V5
+
+#define VPIN_VOLTAGE2 V6
+#define VPIN_CURRENT2 V7
+#define VPIN_POWER2 V8
+#define VPIN_ENERGY2 V9
+#define VPIN_FREQ2 V10
+#define VPIN_PF2 V11
+
+#define VPIN_VOLTAGE3 V12
+#define VPIN_CURRENT3 V13
+#define VPIN_POWER3 V14
+#define VPIN_ENERGY3 V15
+#define VPIN_FREQ3 V16
+#define VPIN_PF3 V17
+
+#define VPIN_PHASE V18
 
 // Create a HardwareSerial object for Serial2
 HardwareSerial arduinoESPSerial(1);
@@ -32,7 +48,7 @@ HardwareSerial arduinoESPSerial(1);
 const char *ssid = "";
 const char *pass = "";
 
-String webAppUrl = "https://script.google.com/macros/s/AKfycbxz4uQqxDnlH5b_beEEaAmhYGL-hbfuyJhzdRg1cSTLYzzVLVL3LsFc5zzt4Gcl66a8/exec";
+String webAppUrl = "";
 String fullData;
 String hourString; 
 
@@ -43,6 +59,7 @@ float results3[6];
 const int maxFloats = 18;     // Maximum number of floats to extract
 float floatArray[maxFloats];  // Array to store the extracted floats
 int floatCount = 0;           // Counter for the number of floats extracted
+int selectedLine = 0;
 
 String convertValuesToString(float arr[6], int index) {
   String dataString;
@@ -85,6 +102,7 @@ void setup() {
   }
   Serial.println("Connected to WiFi");
 
+
   // Check for SD card Status
   #ifdef REASSIGN_PINS
     SPI.begin(sck, miso, mosi, cs);
@@ -95,6 +113,7 @@ void setup() {
       Serial.println("Card Mount Failed");
       return;
     }
+
   uint8_t cardType = SD.cardType();
 
   if (cardType == CARD_NONE) {
@@ -127,9 +146,9 @@ void setup() {
     "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF), "
     "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF)\n";
 
-  // Check and create file for readings
-  if (!SD.exists("/pzemReadings.csv")) {
-    writeFile(SD, "/pzemReadings.csv", pzemHeaders.c_str());
+  // Check and create file for ECE readings
+  if (!SD.exists("/pzemReadings_ECE.csv")) {
+    writeFile(SD, "/pzemReadings_ECE.csv", pzemHeaders.c_str());
   }
 
 }
@@ -157,16 +176,34 @@ void loop() {
       sendDataToGoogleSheets(webAppUrl, fullData);
     }
 
-    appendFile(SD, "/pzemReadings.csv", (data + "\n").c_str());
+    appendFile(SD, "/pzemReadings_ECE.csv", (data + "\n").c_str());
 
     // Send data to Blynk with 2 decimal places
-    Blynk.virtualWrite(VPIN_VOLTAGE, String(results1[0], 2));
-    Blynk.virtualWrite(VPIN_CURRENT, String(results1[1], 2));
-    Blynk.virtualWrite(VPIN_POWER, String(results1[2], 2));
-    Blynk.virtualWrite(VPIN_ENERGY, String(results1[3], 2));
-    Blynk.virtualWrite(VPIN_FREQ, String(results1[4], 2));
-    Blynk.virtualWrite(VPIN_PF, String(results1[5], 2));  // Send PF as percentage
+    Blynk.beginGroup();
+    Blynk.virtualWrite(VPIN_VOLTAGE1, String(results1[0], 2));
+    Blynk.virtualWrite(VPIN_CURRENT1, String(results1[1], 2));
+    Blynk.virtualWrite(VPIN_POWER1, String(results1[2], 2));
+    Blynk.virtualWrite(VPIN_ENERGY1, String(results1[3], 2));
+    Blynk.virtualWrite(VPIN_FREQ1, String(results1[4], 2));
+    Blynk.virtualWrite(VPIN_PF1, String(results1[5], 2));  // Send PF as percentage
+    Blynk.endGroup();
+
+    Blynk.beginGroup();
+    Blynk.virtualWrite(VPIN_VOLTAGE2, String(results2[0], 2));
+    Blynk.virtualWrite(VPIN_CURRENT2, String(results2[1], 2));
+    Blynk.virtualWrite(VPIN_POWER2, String(results2[2], 2));
+    Blynk.virtualWrite(VPIN_ENERGY2, String(results2[3], 2));
+    Blynk.virtualWrite(VPIN_FREQ2, String(results2[4], 2));
+    Blynk.virtualWrite(VPIN_PF2, String(results2[5], 2));  // Send PF as percentage
+    Blynk.endGroup();
+
+    Blynk.beginGroup();
+    Blynk.virtualWrite(VPIN_VOLTAGE3, String(results3[0], 2));
+    Blynk.virtualWrite(VPIN_CURRENT3, String(results3[1], 2));
+    Blynk.virtualWrite(VPIN_POWER3, String(results3[2], 2));
+    Blynk.virtualWrite(VPIN_ENERGY3, String(results3[3], 2));
+    Blynk.virtualWrite(VPIN_FREQ3, String(results3[4], 2));
+    Blynk.virtualWrite(VPIN_PF3, String(results3[5], 2));  // Send PF as percentage
+    Blynk.endGroup();
   }
 }
-
-

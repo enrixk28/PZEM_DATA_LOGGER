@@ -26,7 +26,7 @@
 #define VPIN_PF1 V5
 
 #define VPIN_VOLTAGE2 V6
-#define VPIN_CURRENT2 V7g
+#define VPIN_CURRENT2 V7
 #define VPIN_POWER2 V8
 #define VPIN_ENERGY2 V9
 #define VPIN_FREQ2 V10
