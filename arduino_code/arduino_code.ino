@@ -7,6 +7,7 @@ SoftwareSerial pzemSerial2(4, 5);  // RX, TX for PZEM2
 SoftwareSerial pzemSerial3(6, 7);  // RX, TX for PZEM3
 SoftwareSerial arduinoESPSerial(8, 9); // RX, TX for Arduino to ESP Communication
 
+
 // Initialize PZEM objects for each module
 PZEM004Tv30 pzem1(pzemSerial1);
 PZEM004Tv30 pzem2(pzemSerial2);
@@ -26,15 +27,15 @@ unsigned long previousMillis = 0;
 
 // Read values from PZEM004T
 void read_values(PZEM004Tv30 pzem, float results[6]) {
-    results[0] = pzem.voltage() * voltageCalibrationFactor;
-    results[1] = pzem.current() * currentCalibrationFactor;
-    results[2] = pzem.power() * powerCalibrationFactor;
-    results[3] = pzem.energy() * energyCalibrationFactor;
+    results[0] = pzem.voltage(); //* voltageCalibrationFactor;
+    results[1] = pzem.current(); //* currentCalibrationFactor;
+    results[2] = pzem.power(); //* powerCalibrationFactor;
+    results[3] = pzem.energy(); //* energyCalibrationFactor;
     results[4] = pzem.frequency();
-    results[5] = pzem.pf() * pfCalibrationFactor;
+    results[5] = pzem.pf(); //* pfCalibrationFactor;
 }
 
-// Read values from PZEM004T
+// // Read values from PZEM004T
 // void read_values(PZEM004Tv30 pzem, float results[6]) {
 //     results[0] = 250.00;
 //     results[1] = 0.04;
@@ -87,38 +88,37 @@ void loop() {
   unsigned long hours = currentMillis / 1000; // 1 second conversion
 
   if (currentMillis - previousMillis >= interval) {
-  previousMillis = currentMillis;
+    previousMillis = currentMillis;
 
-  Serial.print("\033[0H\033[0J"); // Deletes previous prints in PuTTY Serial Monitor
+    Serial.print("\033[0H\033[0J"); // Deletes previous prints in PuTTY Serial Monitor
 
-  // Read data from PZEM1
-  Serial.println("Reading from PZEM1");
-  float results1[6];
-  read_values(pzem1, results1);
-  print_values(results1);
+    // Read data from PZEM1
+    Serial.println("Reading from PZEM1");
+    float results1[6];
+    read_values(pzem1, results1);
+    print_values(results1);
 
-  // Read data from PZEM2
-  Serial.println("Reading from PZEM2");
-  float results2[6];
-  read_values(pzem2, results2);
-  print_values(results2);
+    // Read data from PZEM2
+    Serial.println("Reading from PZEM2");
+    float results2[6];
+    read_values(pzem2, results2);
+    print_values(results2);
 
-  // Read data from PZEM3
-  Serial.println("Reading from PZEM3");
-  float results3[6];
-  read_values(pzem3, results3);
-  print_values(results3);
+    // Read data from PZEM3
+    Serial.println("Reading from PZEM3");
+    float results3[6];
+    read_values(pzem3, results3);
+    print_values(results3);
 
-// Send data to ESP32 using SoftwareSerial UART 
-//  Serial.println("Sending Data Test");
-//  arduinoESPSerial.write("Hello");
-  String hourString = String(hours);
-  Serial.println("Duration: " + hourString + " h");
-  arduinoESPSerial.print(hourString + ",");
+  //  Send data to ESP32 using SoftwareSerial UART 
+  //  Serial.println("Sending Data Test");
+  //  arduinoESPSerial.write("Hello");
+    String hourString = String(hours);
+    Serial.println("Duration: " + hourString + " h");
+    arduinoESPSerial.print(hourString + ",");
 
-  sendFloatArray(results1, 6);
-  sendFloatArray(results2, 6);
-  sendFloatArray(results3, 6);
-
+    sendFloatArray(results1, 6);
+    sendFloatArray(results2, 6);
+    sendFloatArray(results3, 6);
   }
 }
