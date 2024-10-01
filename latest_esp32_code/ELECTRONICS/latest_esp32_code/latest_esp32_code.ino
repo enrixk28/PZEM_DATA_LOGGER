@@ -1,7 +1,7 @@
 #define BLYNK_PRINT Serial // For debugging
-#define BLYNK_TEMPLATE_ID "TMPL6x0IEWhH"
-#define BLYNK_TEMPLATE_NAME "THESIS"
-#define BLYNK_AUTH_TOKEN "XS0ZKMIPYW87s7sp69qeZJEliXgraNfx"  // Electronics
+#define BLYNK_TEMPLATE_ID ""
+#define BLYNK_TEMPLATE_NAME ""
+#define BLYNK_AUTH_TOKEN ""  // Electronics
 
 // Fundamental Libraries used in this code
 #include "FS.h" // Library for File Manipulation
@@ -26,7 +26,7 @@
 #define VPIN_PF1 V5
 
 #define VPIN_VOLTAGE2 V6
-#define VPIN_CURRENT2 V7
+#define VPIN_CURRENT2 V7g
 #define VPIN_POWER2 V8
 #define VPIN_ENERGY2 V9
 #define VPIN_FREQ2 V10
@@ -116,53 +116,40 @@ void setup() {
 
   uint8_t cardType = SD.cardType();
 
-  // // Check for SD card Status
-  // #ifdef REASSIGN_PINS
-  //   SPI.begin(sck, miso, mosi, cs);
-  //   if (!SD.begin(cs)) {
-  // #else
-  //   if (!SD.begin()) {
-  // #endif
-  //     Serial.println("Card Mount Failed");
-  //     return;
-  //   }
+  if (cardType == CARD_NONE) {
+    Serial.println("No SD card attached");
+    return;
+  }
 
-  // uint8_t cardType = SD.cardType();
+  Serial.print("SD Card Type: ");
+  if (cardType == CARD_MMC) {
+    Serial.println("MMC");
+  } else if (cardType == CARD_SD) {
+    Serial.println("SDSC");
+  } else if (cardType == CARD_SDHC) {
+    Serial.println("SDHC");
+  } else {
+    Serial.println("UNKNOWN");
+  }
 
-  // if (cardType == CARD_NONE) {
-  //   Serial.println("No SD card attached");
-  //   return;
-  // }
+  uint64_t cardSize = SD.cardSize() / (1024 * 1024);
+  Serial.printf("SD Card Size: %lluMB\n", cardSize);
 
-  // Serial.print("SD Card Type: ");
-  // if (cardType == CARD_MMC) {
-  //   Serial.println("MMC");
-  // } else if (cardType == CARD_SD) {
-  //   Serial.println("SDSC");
-  // } else if (cardType == CARD_SDHC) {
-  //   Serial.println("SDHC");
-  // } else {
-  //   Serial.println("UNKNOWN");
-  // }
+  // Assign Headers for PZEM Sensor readings
+  String pzemHeaders =
+    "Duration,"
+    "Data Logged from PZEM022 Sensor 1,,,,,, "
+    "Data Logged from PZEM022 Sensor 2,,,,,, "
+    "Data Logged from PZEM022 Sensor 3,,,,,\n"
+    "Hour (h),"
+    "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF), "
+    "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF), "
+    "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF)\n";
 
-  // uint64_t cardSize = SD.cardSize() / (1024 * 1024);
-  // Serial.printf("SD Card Size: %lluMB\n", cardSize);
-
-  // // Assign Headers for PZEM Sensor readings
-  // String pzemHeaders =
-  //   "Duration,"
-  //   "Data Logged from PZEM022 Sensor 1,,,,,, "
-  //   "Data Logged from PZEM022 Sensor 2,,,,,, "
-  //   "Data Logged from PZEM022 Sensor 3,,,,,\n"
-  //   "Hour (h),"
-  //   "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF), "
-  //   "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF), "
-  //   "Voltage (V), Current (A), Power (W), Energy (Wh), Frequency (Hz), Power Factor (PF)\n";
-
-  // // Check and create file for ECE readings
-  // if (!SD.exists("/pzemReadings_ECE.csv")) {
-  //   writeFile(SD, "/pzemReadings_ECE.csv", pzemHeaders.c_str());
-  // }
+  // Check and create file for ECE readings
+  if (!SD.exists("/pzemReadings_ECE.csv")) {
+    writeFile(SD, "/pzemReadings_ECE.csv", pzemHeaders.c_str());
+  }
 
 }
 
@@ -189,7 +176,7 @@ void loop() {
       sendDataToGoogleSheets(webAppUrl, fullData);
     }
 
-    // appendFile(SD, "/pzemReadings_ECE.csv", (data + "\n").c_str());
+    appendFile(SD, "/pzemReadings_ECE.csv", (data + "\n").c_str());
 
     // Send data to Blynk with 2 decimal places
     Blynk.beginGroup();
