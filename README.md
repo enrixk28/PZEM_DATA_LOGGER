@@ -18,4 +18,4 @@ of a single alternating current wire; It then logs the data on [Google AppScript
 
 ## Wiring Diagram
 
-![Imgur](https://imgur.com/a/hBlx51R.jpg)
+![Imgur](https://i.imgur.com/phjhITO.jpeg)
