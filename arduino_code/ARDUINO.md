@@ -3,7 +3,7 @@
 This file is responsible for receiving and transferring data from PZEM004 unto ESP32.
 
 It uses software serial library to communicate with three PZEM sensors.
-As well as, the PZEM004T V3 library used for the PZEM sensors
+As well as, the PZEM004T V3 library used for reading PZEM sensor data.
 
 ## Further Reading
 - [Introduction](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/README.md)
