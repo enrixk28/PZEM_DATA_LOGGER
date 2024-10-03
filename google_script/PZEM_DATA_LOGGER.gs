@@ -5,7 +5,7 @@ function doGet(e) {
     result = 'No Parameters';
   }
   else {
-    var sheet_id = '1PjI2aHKEletrjGqA2eQCanaIvnrz10zWkDVelOTWnlA';  // Spreadsheet ID.
+    var sheet_id = '';  // Spreadsheet ID.
     var sheet_name1 = "PZEM Reading EE";  // Sheet Name for PZEM sensors in Electrical Hallway.
     // var sheet_name2 = "PZEM Reading ECE";  // Sheet Name for PZEM sensors in Electronics Hallway.
 
