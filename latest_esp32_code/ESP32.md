@@ -22,3 +22,7 @@ String webAppUrl = "";
 ```
 This connects to the [Apps Script](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/google_script/PZEM_DATA_LOGGER.gs) file
 
+## Further Reading
+- [Introduction](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/README.md)
+- [Arduino](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/arduino_code/ARDUINO.md)
+- [Google Apps Script](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/google_script/APPSCRIPT.md)

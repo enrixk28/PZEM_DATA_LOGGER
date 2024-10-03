@@ -31,3 +31,8 @@ Locate the _url_ under **Web App** and paste it inside [latest_esp32_code.ino fi
     Seen in line:51
 
 ***Done! you can now insert data inside your google spreadsheet***
+
+## Further Reading
+- [Introduction](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/README.md)
+- [Arduino](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/arduino_code/ARDUINO.md)
+- [ESP32](https://github.com/enrixk28/PZEM_DATA_LOGGER/tree/main/latest_esp32_code/ESP32.md)
